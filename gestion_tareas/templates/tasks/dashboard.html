@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Bienvenido, {{ user.username }}</h1>
+<p>Rol: {% if user.is_staff %}Administrador{% else %}Usuario normal{% endif %}</p>
+<hr>
+
+<h2>Tareas recientes</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Título</th>
+            <th>Completada</th>
+            <th>Fecha</th>
+            <th>Usuario</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for task in tasks|slice:":5" %}
+        <tr>
+            <td>{{ task.title }}</td>
+            <td>{{ task.completed|yesno:"Sí,No" }}</td>
+            <td>{{ task.created_at|date:"d/m/Y" }}</td>
+            <td>{{ task.user.username }}</td>
+            <td>
+                <a href="{% url 'task_edit' task.id %}" class="btn btn-sm btn-warning">Editar</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No hay tareas.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'task_list' %}" class="btn btn-primary">Ver todas</a>
+{% endblock %}
